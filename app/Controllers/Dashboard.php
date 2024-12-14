@@ -9,6 +9,7 @@ class Dashboard extends BaseController
 {
     public function index()
     {
+        echo "tess";
         return view('dashboard/index');
     }
 }
