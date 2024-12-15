@@ -9,8 +9,8 @@ class Dashboard extends BaseController
 {
     public function index()
     {
-        echo "tess";
-        die;
+     
         return view('dashboard/index');
     }
 }
+ 
