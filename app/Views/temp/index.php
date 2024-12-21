@@ -13,6 +13,10 @@
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= base_url() ?>dist/css/adminlte.min.css">
+   <!-- SweetAlert2 -->
+   <link rel="stylesheet" href="<?= base_url() ?>plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="<?= base_url() ?>plugins/toastr/toastr.min.css">
   <?= $this->renderSection('css'); ?>
 </head>
 <!--
@@ -101,6 +105,14 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="/asset" class="nav-link">
+              <i class="nav-icon fa fa-tools"></i>
+              <p>
+                Daftar Asset
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="pages/widgets.html" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -152,7 +164,17 @@
 
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+<script src="<?= base_url() ?>plugins/sweetalert2/sweetalert2.min.js"></script>
+<script src="<?= base_url() ?>plugins/toastr/toastr.min.js"></script>
 <?= $this->renderSection('js'); ?>
+<script>
+   var Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
+</script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 
 </body>
