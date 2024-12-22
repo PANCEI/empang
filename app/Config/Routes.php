@@ -13,3 +13,4 @@ $routes->post('/tambah-komoditi','Komoditi::tambah');
 $routes->get('/get-komoditi','Komoditi::getKomoditi');
 $routes->post('/edit-komoditi','Komoditi::editKomoditi');
 $routes->post('/delete-komoditi','Komoditi::delete');
+$routes->get('/asset','Asset::index');
