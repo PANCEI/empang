@@ -13,6 +13,13 @@ class Asset extends BaseController
     }
     public function index()
     {
-    return view('assets/index');
+        $data= $this->asset->orderBy('kodeasset', 'DESC')->findAll();
+    return view('assets/index', $data);
     }
+    public function generateKode(){
+        $kodeAsset = $this->asset->generateKodeAsset();
+        return $this->response->setJSON(['kode' => $kodeAsset]); // Kembalikan JSON
+    }
+    
 }
+

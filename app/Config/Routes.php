@@ -14,3 +14,4 @@ $routes->get('/get-komoditi','Komoditi::getKomoditi');
 $routes->post('/edit-komoditi','Komoditi::editKomoditi');
 $routes->post('/delete-komoditi','Komoditi::delete');
 $routes->get('/asset','Asset::index');
+$routes->get('/generate-kode', 'Asset::generateKode');

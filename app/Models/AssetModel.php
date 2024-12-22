@@ -67,5 +67,5 @@ class AssetModel extends Model
         }
         return 'EMP' . $nextNumber;
     }
-    //
+    //tulis 
 }
