@@ -17,8 +17,6 @@ class AssetModel extends Model
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
 
-    
-
     // Dates
     protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
@@ -27,12 +25,6 @@ class AssetModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    // protected $validationRules      = [
-    //     'kodeasset' => 'required|alpha_numeric|max_length[255]',
-    //     'nama'      => 'required|string|max_length[255]',
-    //     'jumlah'    => 'required|integer',
-    //     'delete_mark' => 'boolean',
-    // ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
@@ -45,8 +37,9 @@ class AssetModel extends Model
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
-    protected $beforeDelete   = [];
+    protected $beforeDelete   = ['deleteRelatedData']; // Tambahkan callback di sini
     protected $afterDelete    = [];
+
     public function generateKodeAsset(): string
     {
         do {
@@ -71,6 +64,36 @@ class AssetModel extends Model
     
         return $newKodeAsset;
     }
-    
-    //tulis 
+
+    /**
+     * Callback untuk menghapus data terkait di tabel tambah_asset
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function deleteRelatedData(array $data)
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('tambah_asset');
+
+        if (isset($data['kodeasset'])) {
+            foreach ($data['kodeasset'] as $kodeasset) {
+                // Hapus data di tabel tambah_asset berdasarkan kodeasset
+                $builder->where('kodeasset', $kodeasset)->delete();
+            }
+        }
+
+        return $data;
+    }
+    /**
+     * Mendapatkan data kodeasset dan nama secara manual
+     *
+     * @return array
+     */
+    public function getDataKodeAssetDanNama()
+    {
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT kodeasset, nama FROM assets");
+        return $query->getResultArray();
+    }
 }
