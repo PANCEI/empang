@@ -44,15 +44,63 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                      Explorer 4.0
-                    </td>
-                    <td>Win 95+</td>
-                    <td> 4</td>
-                    <td>X</td>
-                  </tr>
+                    <?php foreach ($asset as $a): ?>
+                      <tr>
+                        <td><?= $a['kodeasset'] ?></td>
+                        <td><?= $a['nama'] ?></td>
+                        <td><?= $a['jumlah'] ?></td>
+                        <?php if($a['jumlah'] == 0) : ?>
+                        <td><span class="badge badge-danger">Kosong</span></td>
+                        <?php else : ?>
+                        <td><span class="badge badge-info">Ada</span></td>
+                        <?php endif; ?>
+                        <td>
+                        <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit-asset<?= $a['kodeasset'] ?>">
+                          <i class="fas fa-edit"></i> Edit
+                         </button>
+                            <a href="/delete-asset" data-id="<?= $a['kodeasset'] ?>" class="btn btn-danger btn-xs delete-asset">
+                            <i class="fas fa-trash"></i> Hapus
+                             </a>
+                        </td>
+                      </tr>
+                      <!-- awal modal edit -->
+                      <div class="modal fade" id="edit-asset<?= $a['kodeasset'] ?>">
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h4 class="modal-title">Edit Asset</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                <form action="/edit-asset" class="edit-asset" method="POST">
+                                  
+                                    <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="editkodeasset">Kode Asset</label>
+                                        <input type="text" class="form-control" id="editkodeasset" placeholder="Masukan editkodeasset" name="editkodeasset" value="<?= $a['kodeasset'] ?>" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="=editnama">Nama Asset</label>
+                                        <input type="text" class="form-control" id="editnama" placeholder="Masukan editnama" name="editnama" value="<?= $a['nama'] ?>">
+                                    </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                </div>
+                                </form>
+                            </div>
+                            <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+
+                       <!-- akhir modal edit -->
+                    <?php endforeach; ?>
                   </tbody>
                   <tfoot>
                   <tr>
@@ -78,6 +126,44 @@
     </div>
     <!-- /.content -->
   </div>
+  <!-- awak modal  -->
+  <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Tambah Asset</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+            <form action="/tambah-asset" class="tambah-asset" method="POST">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="kodeasset">Kode Asset</label>
+                    <input type="text" class="form-control" id="kodeasset" placeholder="Masukan Kode Asset" name="kodeasset" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label for="Asset">Asset</label>
+                    <input type="text" class="form-control" id="Asset" placeholder="Masukan Asset" name="Asset">
+                  </div>
+                </div>
+                <!-- /.card-body -->
+
+        
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+            </form>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+   </div>
+   <!-- akhir modal -->
+   <div id="dynamicmodal"></div>
 <?= $this->endSection('content'); ?>
 <?= $this->section('js'); ?>
 <!-- DataTables  & Plugins -->
@@ -98,7 +184,7 @@
       "paging": true,
       "lengthChange": true,
       "searching": true,
-      "ordering": true,
+      "ordering": false,
       "info": true,
       "autoWidth": false,
       "responsive": true,
@@ -114,6 +200,7 @@
       url:'/generate-kode',
       method:'GET',
       success:function(res){
+        $('#kodeasset').val(res.kode);
         console.log(res);
       },
       error: function(xhr, status, error) {
@@ -127,6 +214,238 @@
       }
     })
   }
+  function loadAssets() {
+    $.ajax({
+        url: '/get-all-assets', // Sesuaikan dengan endpoint API Anda
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            let table = $('#example2').DataTable(); // Inisialisasi DataTables
+            table.clear(); // Hapus semua data yang ada di DataTables
+            let modals=$("#dynamicmodal");
+            if (data.length > 0) {
+                let rows = [];
+                let modal;
+                data.forEach(asset => {
+                    let status = asset.jumlah == 0 
+                        ? '<span class="badge badge-danger">Kosong</span>' 
+                        : '<span class="badge badge-info">Ada</span>';
+                    
+                    rows.push([
+                        asset.kodeasset,
+                        asset.nama,
+                        asset.jumlah,
+                        status,
+                        `
+                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit-asset${asset.kodeasset}">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <a href="/delete-asset" data-id="${asset.kodeasset}" class="btn btn-danger btn-xs delete-asset">
+                                <i class="fas fa-trash"></i> Hapus
+                            </a>
+                        `
+                    ]);
+                    modal = `
+    <div class="modal fade" id="edit-asset${asset.kodeasset}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Asset</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/edit-asset" class="edit-asset" method="POST">
+                    <div class="modal-body">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="editkodeasset">Kode Asset</label>
+                                <input type="text" class="form-control" id="editkodeasset" placeholder="Masukan Komoditi" name="editkodeasset" value="${asset.kodeasset}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="editnama">Nama Asset</label>
+                                <input type="text" class="form-control" id="editnama" placeholder="Masukan Komoditi" name="editnama" value="${ asset.nama}">
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+`;
+modals.append(modal);
+                });
+              
+                table.rows.add(rows); // Tambahkan data baru ke DataTables
+            }
+            table.draw(); // Render ulang DataTables
+        },
+        error: function(xhr, status, error) {
+            console.error('Status:', status);
+            console.error('Error:', error);
+            console.error('Response:', xhr.responseText);
+            Toast.fire({
+                icon: 'error',
+                title: `Kesalahan: ${status} - ${error}`,
+            });
+        }
+    });
+}
 
+// // Panggil fungsi saat halaman dimuat
+// $(document).ready(function() {
+//     loadAssets();
+
+//     // Refresh data assets setiap 5 menit (opsional)
+//     setInterval(loadAssets, 10000); // 300000 ms = 5 menit
+// });
+$(document).on('submit', 'form.tambah-asset', function(e){
+  e.preventDefault();
+  
+  let form= $(this);
+  let kodeasset= form[0][0].value;
+  let nama= form[0][1].value;
+  if(kodeasset == '' || nama == ''){
+    Toast.fire({
+        icon: 'error',
+        title: 'Inputan harap Di Lengkapi.'
+      });
+      return;
+  }
+  $.ajax({
+    url:form.attr('action'),
+    method:form.attr('method'),
+    data:form.serialize(),
+    success: function(response){
+      console.log(response);
+      if(response.success){
+            Toast.fire({
+              icon: 'success',
+              title: response.success
+              });
+              loadAssets();
+              getkodeasset();
+          }
+          if(response.error){
+            Toast.fire({
+              icon: 'error',
+              title: 'Data Gagal Disimpan'
+              });
+          }
+          $('#modal-default').modal('hide');
+    },
+    error: function(xhr , status, error){
+      $('#modal-default').modal('hide');
+      console.log(xhr);
+      console.log(status);
+      console.log(error);
+    
+    }
+  })
+})
+
+// edit asset 
+$(document).on('submit','form.edit-asset', function(e){
+  e.preventDefault();
+  console.log('oke');
+  let form = $(this);
+  let kodeasset= form[0][0].value;
+  let nama= form[0][1].value;
+  if(kodeasset == '' || nama == ''){
+    Toast.fire({
+      icon: 'error',
+      title: 'Inputan harap Di Lengkapi.'
+      });
+      return;
+  }
+  $.ajax({
+    url:form.attr('action'),
+    method: form.attr('method'),
+    data:form.serialize(),
+    success: function(response){
+      if(response.success){
+            Toast.fire({
+              icon: 'success',
+              title: response.success
+              });
+              loadAssets();
+              getkodeasset();
+          }
+          if(response.error){
+            Toast.fire({
+              icon: 'error',
+              title: 'Data Gagal Disimpan'
+              });
+          }
+          $('#edit-asset' + kodeasset).modal('hide');
+    },
+    error: function(xhr, status , error){
+      console.log(xhr);
+      console.log(status);
+      console.log(error);
+    }
+  })
+})
+// delete kode asset
+$(document).on('click','a.delete-asset', function(e){
+  e.preventDefault();
+  let kodeasset = $(this).data('id');
+  if(kodeasset== ''){
+    Toast.fire({
+      icon: 'error',
+      title: 'Data Yang Di Kirim Tidak Boleh Kosong'
+      });
+      return;
+
+    }
+    Swal.fire({
+  title: "Anda Yakin?",
+  text: "Anda Tidak Dapat Memulihkan Data Yang Di Hapus!",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "Yes, delete it!"
+}).then((result) => {
+  if (result.isConfirmed) {
+   $.ajax({
+    url:'/delete-asset',
+    method: 'POST',
+    data: {kodeasset: kodeasset},
+    success: function(response){
+      if(response.success){
+        Toast.fire({
+          icon: 'success',
+          title: response.success
+          });
+          loadAssets();
+          getkodeasset();
+        }
+        if(response.error){
+            Toast.fire({
+              icon: 'error',
+              title: 'Data Gagal Disimpan'
+              });
+          }
+    },
+    error: function(xhr, status , error){
+      console.log(xhr);
+      console.log(status);
+      console.log(error);
+    }
+  })
+  }
+});
+  
+  console.log('oke');
+
+})
 </script>
 <?= $this->endSection('js');?>

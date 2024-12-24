@@ -15,3 +15,7 @@ $routes->post('/edit-komoditi','Komoditi::editKomoditi');
 $routes->post('/delete-komoditi','Komoditi::delete');
 $routes->get('/asset','Asset::index');
 $routes->get('/generate-kode', 'Asset::generateKode');
+$routes->post('/tambah-asset','Asset::tambah');
+$routes->get('/get-all-assets','Asset::getall');
+$routes->post('/edit-asset', 'Asset::edit');
+$routes->post('/delete-asset', 'Asset::delete');

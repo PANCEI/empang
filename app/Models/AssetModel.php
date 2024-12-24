@@ -17,12 +17,7 @@ class AssetModel extends Model
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
 
-    protected array $casts = [
-        'kodeasset'  => 'string',
-        'nama'       => 'string',
-        'jumlah'     => 'integer',
-        'delete_mark'=> 'boolean',
-    ];
+    
 
     // Dates
     protected $useTimestamps = true;
@@ -32,12 +27,12 @@ class AssetModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [
-        'kodeasset' => 'required|alpha_numeric|max_length[255]',
-        'nama'      => 'required|string|max_length[255]',
-        'jumlah'    => 'required|integer',
-        'delete_mark' => 'boolean',
-    ];
+    // protected $validationRules      = [
+    //     'kodeasset' => 'required|alpha_numeric|max_length[255]',
+    //     'nama'      => 'required|string|max_length[255]',
+    //     'jumlah'    => 'required|integer',
+    //     'delete_mark' => 'boolean',
+    // ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
@@ -54,18 +49,28 @@ class AssetModel extends Model
     protected $afterDelete    = [];
     public function generateKodeAsset(): string
     {
-        $lastAsset = $this->select('kodeasset')
-                          ->orderBy('kodeasset', 'DESC')
-                          ->limit(1)
-                          ->get()
-                          ->getRowArray();
-
-        if ($lastAsset && preg_match('/EMP(\d+)/', $lastAsset['kodeasset'], $matches)) {
-            $nextNumber = (int)$matches[1] + 1;
-        } else {
-            $nextNumber = 1;
-        }
-        return 'EMP' . $nextNumber;
+        do {
+            $lastAsset = $this->select('kodeasset')
+                              ->orderBy('kodeasset', 'DESC')
+                              ->limit(1)
+                              ->get()
+                              ->getRowArray();
+    
+            if ($lastAsset && preg_match('/EMP(\d+)/', $lastAsset['kodeasset'], $matches)) {
+                $nextNumber = (int)$matches[1] + 1;
+            } else {
+                $nextNumber = 1;
+            }
+    
+            $newKodeAsset = 'EMP' . $nextNumber;
+    
+            // Cek apakah kode sudah ada di database
+            $exists = $this->where('kodeasset', $newKodeAsset)->countAllResults() > 0;
+    
+        } while ($exists); // Ulangi jika kode sudah ada
+    
+        return $newKodeAsset;
     }
+    
     //tulis 
 }

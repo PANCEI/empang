@@ -90,6 +90,7 @@
                             </div>
                             <!-- /.modal-dialog -->
                         </div>
+                       
                      <!-- akhir modal edit -->
                     <?php endforeach; ?>
                   </tbody>
@@ -137,7 +138,7 @@
           <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
-      </div>
+   </div>
       <div id="dynamicmodal"></div>
 <?= $this->endSection('content'); ?>
 <?= $this->section('js'); ?>
