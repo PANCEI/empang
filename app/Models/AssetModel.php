@@ -93,7 +93,7 @@ class AssetModel extends Model
     public function getDataKodeAssetDanNama()
     {
         $db = \Config\Database::connect();
-        $query = $db->query("SELECT kodeasset, nama FROM assets");
+        $query = $db->query("SELECT kodeasset, nama FROM assets WHERE delete_mark = 0");
         return $query->getResultArray();
     }
 }

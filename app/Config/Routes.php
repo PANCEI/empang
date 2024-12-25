@@ -21,4 +21,8 @@ $routes->post('/edit-asset', 'Asset::edit');
 $routes->post('/delete-asset', 'Asset::delete');
 $routes->get('/tambah-jumlah-asset','TambahAsset::index');
 $routes->get('/tambah-asset-getall-asset', 'TambahAsset::getAllAssets');
+$routes->post('/asset-masuk','TambahAsset::tambah');
+$routes->get('/tambah-asset-getdatamasukall','TambahAsset::getdataall');
+$routes->post('/delete-masuk','TambahAsset::delete');
+
 

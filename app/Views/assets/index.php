@@ -431,7 +431,7 @@ $(document).on('click','a.delete-asset', function(e){
         if(response.error){
             Toast.fire({
               icon: 'error',
-              title: 'Data Gagal Disimpan'
+              title: 'Data Gagal Di hapus'
               });
           }
     },

@@ -29,7 +29,7 @@ class TambahAssetModel extends Model
     protected $beforeInsert   = [];
     protected $afterInsert    = ['updateAssetJumlah'];
     protected $beforeDelete   = [];
-    protected $afterDelete    = ['reduceAssetJumlah'];
+    protected $afterDelete    = [];
 
     /**
      * Callback untuk menambahkan jumlah di tabel asset setelah insert
@@ -37,7 +37,7 @@ class TambahAssetModel extends Model
     protected function updateAssetJumlah(array $data)
     {
         $db = \Config\Database::connect();
-        $builder = $db->table('asset');
+        $builder = $db->table('assets');
 
         // Ambil kodeaset dan jumlah dari data yang di-insert
         $kodeaset = $data['data']['kodeaset'];
@@ -45,36 +45,51 @@ class TambahAssetModel extends Model
 
         // Update jumlah di tabel asset
         $builder->set('jumlah', "jumlah + $jumlah", false)
-                ->where('kodeaset', $kodeaset)
+                ->where('kodeasset', $kodeaset)
                 ->update();
 
         return $data;
     }
 
+    
+    public function reduceAssetJumlah($jumlah, $kodeaset)
+    {
+        $kodeaset = $kodeaset;
+        $jumlah = $jumlah;
+    
+        // Kurangi jumlah di tabel asset
+        $db = \Config\Database::connect();
+        $builder = $db->table('assets');
+        
+        // Eksekusi update
+        $builder->set('jumlah', "jumlah - $jumlah", false)
+                ->where('kodeasset', $kodeaset);
+        
+        if ($builder->update()) {
+            // Jika update berhasil
+            return true;
+        } else {
+            // Jika update gagal
+            return false;
+        }
+    }
+    
+    
+    
+    
     /**
-     * Callback untuk mengurangi jumlah di tabel asset setelah delete
+     * Melakukan query left join dengan tabel assets berdasarkan kodeasset
+     * 
+     * @return array
      */
-    protected function reduceAssetJumlah(array $data)
+    public function getallassetmasuk()
     {
         $db = \Config\Database::connect();
-        $builder = $db->table('asset');
-
-        // Ambil id dari data yang dihapus
-        $id = $data['id'];
-
-        // Ambil data terkait dari tabel tambah_asset sebelum dihapus
-        $deletedData = $this->find($id);
-
-        if ($deletedData) {
-            $kodeaset = $deletedData['kodeaset'];
-            $jumlah = $deletedData['jumlah'];
-
-            // Kurangi jumlah di tabel asset
-            $builder->set('jumlah', "jumlah - $jumlah", false)
-                    ->where('kodeaset', $kodeaset)
-                    ->update();
-        }
-
-        return $data;
+        $builder = $db->table('tambah_asset');
+        $builder->select('tambah_asset.*, assets.nama AS nama_asset');
+        $builder->join('assets', 'assets.kodeasset = tambah_asset.kodeaset', 'left');
+        $builder->orderBy('tambah_asset.id', 'DESC');
+        $query = $builder->get();
+        return $query->getResultArray();
     }
 }
