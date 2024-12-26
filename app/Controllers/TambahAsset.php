@@ -18,12 +18,12 @@ class TambahAsset extends BaseController
     }
     public function index()
     {
+        // echo "masuk ini";
         $data = [
             'masuk'=>$this->tambah->getallassetmasuk()
         
         ];
-      
-        return view('assets/tambah', $data);
+        return view('assets/tambaha', $data);
     }
     public function getAllAssets()
     {

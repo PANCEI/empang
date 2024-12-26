@@ -12,48 +12,19 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Asset Masuk</h1>
+            <h1 class="m-0">Asset Keluar</h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
         <button type="button" class="btn btn-info mt-2" data-toggle="modal" data-target="#modal-default">
-                    Asset Masuk
+                    Asset Keluar
                 </button>
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-<!-- //<?php var_dump($masuk);  ?> -->
-    <!-- Main content -->
-    <div class="content">
-      <div class="contai<?= $this->extend('temp/index'); ?>
-<?= $this->section('css'); ?>
-<?= $this->endSection('css'); ?>
-<?= $this->section('content'); ?>
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Dashboard v3</h1>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
+     <!-- <?php var_dump($keluar) ?> -->
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-        <div class="row">
-            
-        </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </div>
-    <!-- /.content -->
-  </div>
-
         <div class="row">
         <div class="col-12">
             <div class="card">
@@ -68,27 +39,31 @@
                     <th>Id</th>
                     <th>Kode Asset</th>
                     <th>Jumlah</th>
+                    <th>keterangan</th>
                     <th>Aksi</th>
                   </tr>
                   </thead>
                   <tbody>
-                   <?php $i=1; ?>
-                   <?php foreach($masuk as $m): ?>
+                  <?php $i=1; ?>
+                  <?php foreach ($keluar as $k) :?>
                     <tr>
-                      <td><?= $i++; ?></td>
-                      <td><?= $m['kodeaset']; ?> || <?= $m['nama_asset']; ?> </td>
-                      <td><?= $m['jumlah']; ?></td>
-                      <td> <a href="/delete-masuk" data-id="<?= $m['id'] ?>" class="btn btn-danger btn-xs delete-masuk">
+                      <td><?= $i; ?></td>
+                      <td><?= $k['kodeaset'] ?> || <?= $k['nama_asset'] ?> </td>
+                      <td><?= $k['jumlah'] ?></td>
+                      <td><?= $k['keterangan'] ?></td>
+                      <td> <a href="/delete-keluar" data-id="<?= $k['id'] ?>" class="btn btn-danger btn-xs delete-keluar">
                             <i class="fas fa-trash"></i> Hapus
                              </a></td>
-                   <?php $i++; ?>
-                   <?php endforeach; ?>
+                    </tr>
+                  <?php $i++ ?>
+                  <?php endforeach; ?>
                   </tbody>
                   <tfoot>
                   <tr>
                   <th>Id</th>
                     <th>Kode Asset</th>
                     <th>Jumlah</th>
+                    <th>keterangan</th>
                     <th>Aksi</th>
                   </tr>
                   </tfoot>
@@ -108,18 +83,18 @@
     </div>
     <!-- /.content -->
   </div>
-  <!-- awal modal -->
+  <!-- awal modal  -->
   <div class="modal fade" id="modal-default">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Asset Masuk</h4>
+              <h4 class="modal-title">Asset keluar</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-            <form action="/asset-masuk" class="asset-masuk" method="POST">
+            <form action="/asset-keluar" class="asset-keluar" method="POST">
                 <div class="card-body">
                   <div class="form-group">
                     <label for="assetall">Kode Asset</label>
@@ -131,6 +106,10 @@
                   <div class="form-group">
                     <label for="jumlah">Jumlah</label>
                     <input type="number" class="form-control" id="jumlah" placeholder="Masukan Asset" name="jumlah">
+                  </div>
+                  <div class="form-group">
+                    <label for="keterangan">Keterangan</label>
+                    <textarea class="form-control" id="keterangan" placeholder="Masukan Keterangan" name="keterangan"></textarea>
                   </div>
                 </div>
                 <!-- /.card-body -->
@@ -147,7 +126,7 @@
         </div>
         <!-- /.modal-dialog -->
    </div>
-   <!-- akhir modal -->
+   <!-- akhir modal  -->
 <?= $this->endSection('content'); ?>
 <?= $this->section('js'); ?>
 <!-- DataTables  & Plugins -->
@@ -163,7 +142,6 @@
 <script src="<?= base_url() ?>plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="<?= base_url() ?>plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="<?= base_url() ?>plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-
 <script>
    $('#example2').DataTable({
       "paging": true,
@@ -179,7 +157,7 @@
         "processing": "Memuat..."
       }
     });
-  //  getallasset();
+     getallasset();
 function getallasset(){
     $.ajax({
         url: '/tambah-asset-getall-asset',
@@ -196,9 +174,9 @@ function getallasset(){
     });
 }
 
-function getdatamasukall() {
+function getdatakeluarall() {
     $.ajax({
-        url: '/tambah-asset-getdatamasukall', // Endpoint untuk mendapatkan data
+        url: '/kurang-asset-getdatakeluarall', // Endpoint untuk mendapatkan data
         type: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -213,7 +191,8 @@ function getdatamasukall() {
                         index + 1, // Nomor urut
                         value.kodeaset + " || " + value.nama_asset, // Kode Asset dan Nama
                         value.jumlah, // Jumlah
-                        `<a href="/delete-masuk" data-id="${value.id}" class="btn btn-danger btn-xs delete-masuk">
+                        value.keterangan, // keterangan
+                        `<a href="/delete-keluar" data-id="${value.id}" class="btn btn-danger btn-xs delete-keluar">
                             <i class="fas fa-trash"></i> Hapus
                         </a>`
                     ]);
@@ -230,14 +209,14 @@ function getdatamasukall() {
         }
     });
 }
-// insert data
-$(document).on('submit','form.asset-masuk',function(e){
+$(document).on('submit','form.asset-keluar', function(e){
   e.preventDefault();
-  let form= $(this);
-  console.log(form[0][0].value);
+  console.log('oke');
+  let form=$(this);
   let kodeaset= form[0][0].value;
-  let jumlah = form[0][1].value;
-  if(kodeaset == '' || jumlah == ''){
+  let jumlah=form[0][1].value;
+  let keterangan=form[0][2].value;
+  if(kodeaset == '' || jumlah == '' || keterangan == ''){
     Toast.fire({
         icon: 'error',
         title: 'Inputan harap Di Lengkapi.'
@@ -246,15 +225,15 @@ $(document).on('submit','form.asset-masuk',function(e){
   }
   $.ajax({
     url: form.attr('action'),
-    method:form.attr('method'),
+    method: form.attr('method'),
     data: form.serialize(),
-    success: function (response){
+    success: function(response){
       if(response.success){
             Toast.fire({
               icon: 'success',
               title: response.success
               });
-              getdatamasukall();
+              getdatakeluarall();
           }
           if(response.error){
             Toast.fire({
@@ -263,6 +242,7 @@ $(document).on('submit','form.asset-masuk',function(e){
               });
           }
           $('#modal-default').modal('hide');
+      
     },
     error: function (xhr, status, error) {
     console.log(xhr);
@@ -271,7 +251,7 @@ $(document).on('submit','form.asset-masuk',function(e){
     }
   })
 })
-$(document).on('click','a.delete-masuk', function(e){
+$(document).on('click','a.delete-keluar', function(e){
   e.preventDefault();
   let id = $(this).data('id');
   if(id== ''){
@@ -293,7 +273,7 @@ $(document).on('click','a.delete-masuk', function(e){
 }).then((result) => {
   if (result.isConfirmed) {
    $.ajax({
-    url:'/delete-masuk',
+    url:'/delete-keluar',
     method: 'POST',
     data: {id: id},
     success: function(response){
@@ -312,7 +292,7 @@ $(document).on('click','a.delete-masuk', function(e){
               title: 'Data Gagal Dihapus'
               });
           }
-          getdatamasukall();
+          getdatakeluarall();
     },
     error: function(xhr, status , error){
       console.log(xhr);

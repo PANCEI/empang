@@ -122,6 +122,15 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="/kurang-jumlah-asset" class="nav-link">
+              <i class="nav-icon fa fa-cogs"></i>
+              <p>
+                Asset Keluar
+               
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="pages/widgets.html" class="nav-link">
               <i class="nav-icon fa fa-cogs"></i>
               <p>

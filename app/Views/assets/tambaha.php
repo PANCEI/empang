@@ -12,7 +12,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Asset Masuk</h1>
+          <h1 class="m-0">Asset Masuk</h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
         <button type="button" class="btn btn-info mt-2" data-toggle="modal" data-target="#modal-default">
@@ -21,39 +21,10 @@
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-<!-- //<?php var_dump($masuk);  ?> -->
-    <!-- Main content -->
-    <div class="content">
-      <div class="contai<?= $this->extend('temp/index'); ?>
-<?= $this->section('css'); ?>
-<?= $this->endSection('css'); ?>
-<?= $this->section('content'); ?>
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Dashboard v3</h1>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
+<!-- //<?php var_dump($masuk) ?> -->
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-        <div class="row">
-            
-        </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </div>
-    <!-- /.content -->
-  </div>
-
         <div class="row">
         <div class="col-12">
             <div class="card">
@@ -75,7 +46,7 @@
                    <?php $i=1; ?>
                    <?php foreach($masuk as $m): ?>
                     <tr>
-                      <td><?= $i++; ?></td>
+                      <td><?= $i; ?></td>
                       <td><?= $m['kodeaset']; ?> || <?= $m['nama_asset']; ?> </td>
                       <td><?= $m['jumlah']; ?></td>
                       <td> <a href="/delete-masuk" data-id="<?= $m['id'] ?>" class="btn btn-danger btn-xs delete-masuk">
@@ -108,8 +79,8 @@
     </div>
     <!-- /.content -->
   </div>
-  <!-- awal modal -->
-  <div class="modal fade" id="modal-default">
+    <!-- awal modal -->
+    <div class="modal fade" id="modal-default">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -148,6 +119,8 @@
         <!-- /.modal-dialog -->
    </div>
    <!-- akhir modal -->
+<?= $this->endSection('content'); ?>
+<?= $this->section('js'); ?>
 <?= $this->endSection('content'); ?>
 <?= $this->section('js'); ?>
 <!-- DataTables  & Plugins -->
