@@ -28,5 +28,9 @@ $routes->get('/kurang-jumlah-asset','AssetKeluar::index');
 $routes->post('/asset-keluar','AssetKeluar::tambah');
 $routes->get('/kurang-asset-getdatakeluarall','AssetKeluar::getall');
 $routes->post('/delete-keluar','AssetKeluar::delete');
+$routes->get('/rumput-laut','Invoice::index');
+$routes->get('/get-kode-invoice-rmpl','Invoice::getkode');
+$routes->post('/invoice-rmpl','Invoice::tambah');
+$routes->get('/print','Invoice::cetak');
 
 
